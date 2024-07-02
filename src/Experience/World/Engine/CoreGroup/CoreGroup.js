@@ -10,7 +10,7 @@ export default class CoreGroup {
   constructor() {
     this.experience = new Experience();
     this.scene = this.experience.scene;
-    this.elapsedTime = this.experience.time.getElapsedTime();
+    // this.elapsedTime = this.experience.time.getElapsedTime();
 
     this.setInstance();
     this.setInnerSphere();
@@ -51,6 +51,7 @@ export default class CoreGroup {
   }
 
   addCoreGroup() {
+    this.instance.position.x = 2;
     this.scene.add(this.instance);
   }
 

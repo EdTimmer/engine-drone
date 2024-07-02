@@ -3,6 +3,7 @@ import Environment from "./Environment"
 import Floor from "./Floor"
 import Fox from "./Fox"
 import CoreGroup from "./Engine/CoreGroup/CoreGroup"
+import OuterGroup from "./Engine/OuterGroup/OuterGroup"
 
 export default class World {
   constructor() {
@@ -17,6 +18,7 @@ export default class World {
       this.floor = new Floor()
       this.fox = new Fox()
       this.coreGroup = new CoreGroup()
+      this.outerGroup = new OuterGroup()
       this.environment = new Environment()            
     })
   }
@@ -27,6 +29,9 @@ export default class World {
     }
     if (this.coreGroup) {
       this.coreGroup.update()
+    }
+    if (this.outerGroup) {
+      this.outerGroup.update()
     }
   }
 }
