@@ -2,8 +2,9 @@ import Experience from "../Experience"
 import Environment from "./Environment"
 import Floor from "./Floor"
 import Fox from "./Fox"
-import CoreGroup from "./Engine/CoreGroup/CoreGroup"
-import OuterGroup from "./Engine/OuterGroup/OuterGroup"
+// import CoreGroup from "./EngineGroup/CoreGroup/CoreGroup"
+// import OuterGroup from "./EngineGroup/OuterGroup/OuterGroup"
+import EngineGroup from "./EngineGroup/EngineGroup"
 
 export default class World {
   constructor() {
@@ -17,8 +18,9 @@ export default class World {
       // Setup
       this.floor = new Floor()
       this.fox = new Fox()
-      this.coreGroup = new CoreGroup()
-      this.outerGroup = new OuterGroup()
+      // this.coreGroup = new CoreGroup()
+      // this.outerGroup = new OuterGroup()
+      this.engineGroup = new EngineGroup()
       this.environment = new Environment()            
     })
   }
@@ -27,11 +29,14 @@ export default class World {
     if (this.fox) {
       this.fox.update()
     }
-    if (this.coreGroup) {
-      this.coreGroup.update()
-    }
-    if (this.outerGroup) {
-      this.outerGroup.update()
+    // if (this.coreGroup) {
+    //   this.coreGroup.update()
+    // }
+    // if (this.outerGroup) {
+    //   this.outerGroup.update()
+    // }
+    if (this.engineGroup) {
+      this.engineGroup.update()
     }
   }
 }

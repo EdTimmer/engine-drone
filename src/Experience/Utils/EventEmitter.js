@@ -1,7 +1,6 @@
 export default class EventEmitter
 {
-    constructor()
-    {
+    constructor() {
         this.callbacks = {}
         this.callbacks.base = {}
     }

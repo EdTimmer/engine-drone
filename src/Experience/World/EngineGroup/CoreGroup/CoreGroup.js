@@ -15,10 +15,10 @@ export default class CoreGroup {
     this.setInstance();
     this.setInnerSphere();
     this.setOuterSphere();
-    this.addCoreGroup();
     this.setRingOne();
     this.setRingTwo();
     this.setRingThree();
+    this.positionCoreGroup();
   }
 
   setInstance() {
@@ -50,9 +50,12 @@ export default class CoreGroup {
     this.instance.add(this.ringThree.getMesh());
   }
 
-  addCoreGroup() {
+  positionCoreGroup() {
     this.instance.position.x = 2;
-    this.scene.add(this.instance);
+  }
+
+  getCoreGroup() {
+    return this.instance;
   }
 
   update() {
