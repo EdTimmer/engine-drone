@@ -10,8 +10,6 @@ export default class EngineGroup {
     this.eventListener = new EventListener();
     this.scene = this.experience.scene;
     this.resources = this.experience.resources;
-    this.movementSpeed = 0.5; // Adjust movement speed here
-    this.rotationSpeed = 0.001; // Adjust rotation speed here
     this.setInstance();
     this.setCoreGroup();
     this.setOuterGroup();
@@ -63,6 +61,7 @@ export default class EngineGroup {
   handleMovement(deltaTime) {
     const speed = 0.1;
     const verticalSpeed = 0.5;
+    const rotationSpeed = 0.005;
 
     if (this.keyStates['ArrowUp']) {
       const forward = new THREE.Vector3(-1, 0, 0); // Faces negative x-direction initially
@@ -75,19 +74,19 @@ export default class EngineGroup {
       this.instance.position.add(backward.multiplyScalar(speed * deltaTime));
     }
     if (this.keyStates['ArrowLeft']) {
-      this.instance.rotation.y += this.rotationSpeed * deltaTime;
+      this.instance.rotation.y += rotationSpeed * deltaTime;
     }
     if (this.keyStates['ArrowRight']) {
-      this.instance.rotation.y -= this.rotationSpeed * deltaTime;
+      this.instance.rotation.y -= rotationSpeed * deltaTime;
     }
     if (this.keyStates['w']) {
-      const top = new THREE.Vector3(0, 1, 0);
+      const top = new THREE.Vector3(0, 0.05, 0);
       if (this.instance.position.y < 50) {
         this.instance.position.add(top.multiplyScalar(verticalSpeed * deltaTime));
       }
     }
     if (this.keyStates['s']) {
-      const down = new THREE.Vector3(0, -1, 0);
+      const down = new THREE.Vector3(0, -0.05, 0);
       if (this.instance.position.y > -50) {
         this.instance.position.add(down.multiplyScalar(verticalSpeed * deltaTime));
       }
