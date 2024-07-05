@@ -18,6 +18,10 @@ export default class Time extends EventEmitter {
   getElapsedTime() {
     return this.elapsed;
   }
+
+  getDelta() {
+    return this.delta;
+  }
   
   tick() {
     const currentTime = Date.now();

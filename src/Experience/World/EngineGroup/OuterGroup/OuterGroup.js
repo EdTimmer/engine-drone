@@ -12,6 +12,7 @@ export default class OuterGroup {
     this.scene = this.experience.scene;
     this.resources = this.experience.resources;
 
+    // Rocking parameters
     this.startUpTime = null;
     this.startLeftTime = null;
     this.startRightTime = null;
@@ -23,13 +24,13 @@ export default class OuterGroup {
     this.duration = 1000; // duration of the full animation in milliseconds
     this.rotationStep = 0.5; // total rotation
 
-
     this.setInstance();
     this.setShell();
     this.setSeal();
     this.getHeadGroup();
     this.addEventListeners();
 
+    // Rocking animation
     requestAnimationFrame(this.animateRocking.bind(this));
   }
 
@@ -60,7 +61,6 @@ export default class OuterGroup {
 
   addEventListeners() {
     this.eventListener.addKeyboardListeners();
-    this.eventListener.on('arrowKeyDown', this.handleArrowKeyDown.bind(this));
     this.eventListener.on('arrowKeyDown', this.handleArrowKeyDown.bind(this));
     this.eventListener.on('arrowKeyUp', this.handleArrowKeyUp.bind(this));
   }
@@ -107,7 +107,6 @@ export default class OuterGroup {
     if (this.startDownTime !== null) {
       this.updateDownRotation(time);
     }
-    // this.experience.renderer.render(this.scene, this.experience.camera);
   }
 
   updateUpRotation(time) {

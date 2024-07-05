@@ -15,7 +15,7 @@ export default class Camera {
   }
 
   setInstance() {
-    this.instance = new THREE.PerspectiveCamera(75, this.sizes.width / this.sizes.height, 0.1, 100)
+    this.instance = new THREE.PerspectiveCamera(75, this.sizes.width / this.sizes.height, 0.1, 1000)
     this.instance.position.set(0, 0, 28)
     this.scene.add(this.instance)
   }
@@ -25,11 +25,21 @@ export default class Camera {
     this.controls.enableDamping = true
   }
 
+  setTarget(target) {
+    this.target = target
+  }
+
   resize() {
-    console.log('Camera resize')
+    this.instance.aspect = this.sizes.width / this.sizes.height
+    this.instance.updateProjectionMatrix()
   }
 
   update() {
-    this.controls.update()
+    if (this.controls) {
+      this.controls.update() 
+    }
+    if (this.target) {
+      this.instance.lookAt(this.target.position)
+    }
   }
 }
