@@ -10,11 +10,12 @@ export default class EngineGroup {
     this.eventListener = new EventListener();
     this.scene = this.experience.scene;
     this.resources = this.experience.resources;
+    this.keyStates = {};
+
     this.setInstance();
     this.setCoreGroup();
     this.setOuterGroup();
     this.addEngineGroup();
-    this.keyStates = {};
     this.initKeyListeners();
   }
 

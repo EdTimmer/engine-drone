@@ -7,6 +7,7 @@ import World from './World/World'
 import Resources from './Utils/Resources'
 import Debug from './Utils/Debug'
 import sources from './sources'
+import Physics from './World/Physics'
 
 let instance = null
 
@@ -33,8 +34,8 @@ export default class Experience {
     this.camera = new Camera()
     this.renderer = new Renderer()
     this.world = new World()
+    this.physics = new Physics()
     // this.elapsedTime = this.time.getElapsedTime()
-    // console.log('this.elapsed :>> ', this.elapsed);
 
     // Sizes resize event
     this.sizes.on('resize', () => {
@@ -56,6 +57,7 @@ export default class Experience {
     // camera update should be before renderer update
     this.camera.update()
     this.world.update()
+    this.physics.update()
     this.renderer.update()
   }
 

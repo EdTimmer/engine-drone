@@ -13,7 +13,7 @@ export default class World {
     this.resources.on('ready', () => {
       // Setup
       this.engineGroup = new EngineGroup()
-      this.environment = new Environment()     
+      this.environment = new Environment()
            
       // Pass engineGroup to the camera
       this.camera.setTarget(this.engineGroup.instance)
