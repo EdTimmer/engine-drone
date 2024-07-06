@@ -1,6 +1,7 @@
 import Experience from "../Experience"
 import Environment from "./Environment"
 import EngineGroup from "./EngineGroup/EngineGroup"
+import Target from "./Target"
 
 export default class World {
   constructor() {
@@ -13,6 +14,7 @@ export default class World {
     this.resources.on('ready', () => {
       // Setup
       this.engineGroup = new EngineGroup()
+      this.target = new Target()
       this.environment = new Environment()
            
       // Pass engineGroup to the camera
@@ -26,6 +28,9 @@ export default class World {
     }
     if (this.engineGroup) {
       this.engineGroup.update()
+    }
+    if (this.target) {
+      this.target.update()
     }
   }
 }
