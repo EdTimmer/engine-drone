@@ -63,26 +63,5 @@ export default class Camera {
     if (this.target) {
       this.instance.lookAt(this.target.position);
     }
-    // if (this.experience && (this.clock.getElapsedTime() < this.introDuration)) {
-    //   const elapsedTime = this.clock.getElapsedTime();
-
-    //   // Calculate the interpolation factor (between 0 and 1)
-    //   const t = Math.min(elapsedTime / this.introDuration, 1);
-
-    //   // Interpolate between the start and target positions
-    //   if (this.instance) {
-    //     this.instance.position.lerpVectors(this.startPosition, this.endPosition, t);
-    //   }
-
-    //   // Update controls
-    //   if (this.controls) {
-    //     this.controls.update();
-    //   }
-
-    //   // Render
-    //   if (this.experience?.renderer) {
-    //     this.experience.renderer.instance.render(this.scene, this.instance);
-    //   }
-    // }
   }
 }
