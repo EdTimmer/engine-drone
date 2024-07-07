@@ -5,21 +5,23 @@ import Experience from '../Experience';
 export default class Physics {
   constructor() {
     this.experience = new Experience();
+    this.targetPositions = this.experience.world.targetPositions;
     this.timeStep = 1 / 60;
     this.clock = new THREE.Clock();
     this.lastCollisionTime = 0;
+    this.targetBodies = [];
+    this.targetMeshes = this.experience.world.targetMeshes;
 
     this.setWorld();
     this.setMaterials();
     this.setEngineBody();
-    this.setTargetBody();
-    this.setUpTargetCollisionListener();
+    this.setTargetBodies();
   }
 
   setWorld() {
     this.world = new CANNON.World();
     this.world.gravity.set(0, 0, 0); // weightless
-    this.world.broadphase = new CANNON.NaiveBroadphase(); // Ensure broadphase is set
+    this.world.broadphase = new CANNON.NaiveBroadphase();
   }
 
   setMaterials() {
@@ -45,21 +47,22 @@ export default class Physics {
     this.world.addBody(this.engineBody);
   }
 
-  setTargetBody() {
-    this.targetBody = new CANNON.Body({
-      mass: 1,
-      shape: new CANNON.Sphere(4),
-      material: this.defaultMaterial,
-      position: new CANNON.Vec3(40, 0, 0),
-    });
-    this.world.addBody(this.targetBody);
+  setTargetBodies() {
+    this.targetPositions.forEach((position) => {
+      const targetBody = new CANNON.Body({
+        mass: 1,
+        shape: new CANNON.Sphere(4),
+        material: this.defaultMaterial,
+        position: new CANNON.Vec3(position.x, position.y, position.z),
+      });
+      this.targetBodies.push(targetBody);
+      targetBody.addEventListener('collide', (event) => this.handleCollision(event, targetBody.id));
+      
+      this.world.addBody(targetBody);
+    })
   }
 
-  setUpTargetCollisionListener() {
-    this.targetBody.addEventListener('collide', (event) => this.handleCollision(event));
-  }
-
-  handleCollision(event) {
+  handleCollision(event, targetBodyId) {
     const otherBody = event.body;
     const contact = event.contact;
     let normal = null;
@@ -73,7 +76,7 @@ export default class Physics {
     }
 
     // Get the normal of the contact. Make sure it points away from the surface of the stationary body
-    if (contact.bi.id === this.targetBody.id) {
+    if (contact.bi.id === targetBodyId) {
       normal = contact.ni;
     } else {
       normal = contact.ni.scale(-1);
@@ -90,6 +93,45 @@ export default class Physics {
     body.applyImpulse(impulse, contactPoint);
   }
 
+  // ARENA
+  setWallBody(wallGeometry, meshPosition, meshQuaternion)  {
+    this.wallBody = new CANNON.Body({
+      mass: 0, // Static body
+    });
+    const trimesh = this.createTrimeshFromGeometry(wallGeometry);
+    this.wallBody.addShape(trimesh);
+    this.wallBody.position.set(0, 25, 0);
+
+    // Rotate the body to align with XZ plane
+    const q = new CANNON.Quaternion();
+    q.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), Math.PI);
+    this.wallBody.quaternion.copy(q);
+
+    this.world.addBody(this.wallBody);
+
+    this.wallBody.position.copy(meshPosition)
+    this.wallBody.quaternion.copy(meshQuaternion)
+  }
+
+  createTrimeshFromGeometry(geometry) {
+    const vertices = [];
+    const indices = [];
+  
+    // Extract vertices from the geometry
+    for (let i = 0; i < geometry.attributes.position.count; i++) {
+      vertices.push(geometry.attributes.position.array[i * 3]);
+      vertices.push(geometry.attributes.position.array[i * 3 + 1]);
+      vertices.push(geometry.attributes.position.array[i * 3 + 2]);
+    }
+  
+    // Extract indices from the geometry
+    for (let i = 0; i < geometry.index.count; i++) {
+      indices.push(geometry.index.array[i]);
+    }
+  
+    return new CANNON.Trimesh(vertices, indices);
+  }
+
   update() {
     this.delta = this.experience.time.getDelta();
     this.world.step(this.timeStep, this.delta, 3);
@@ -100,9 +142,11 @@ export default class Physics {
       this.engineBody.quaternion.copy(this.experience.world.engineGroup.instance.quaternion)
     }
     // Have target mesh follow the target body
-    if (this.experience.world.target) {
-      this.experience.world.target.mesh.position.copy(this.targetBody.position);
-      this.experience.world.target.mesh.quaternion.copy(this.targetBody.quaternion);
+    if (this.targetMeshes.length === 6 && this.targetBodies.length === 6) {
+      this.targetBodies.forEach((targetBody) => {
+        this.targetMeshes[targetBody.id - 1].position.copy(targetBody.position);
+        this.targetMeshes[targetBody.id - 1].quaternion.copy(targetBody.quaternion);
+      })
     }
   }
 }

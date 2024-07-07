@@ -2,14 +2,13 @@ import * as THREE from 'three'
 import Experience from '../Experience'
 
 export default class Target {
-  constructor() {
-    // this.numberOfTargets = 1
-    // this.separationDistance = 60
+  constructor(position) {
     this.experience = new Experience()
+    this.position = position
 
     this.setGeometry()
     this.setMaterial()
-    this.setMesh()
+    this.getMesh()
     this.update()
   }
 
@@ -27,10 +26,10 @@ export default class Target {
     this.material.roughness = 0
   }
   
-  setMesh() {
+  getMesh() {
     this.mesh = new THREE.Mesh(this.geometry, this.material)
-    this.mesh.position.set(40, 0, 0)
-    this.experience.scene.add(this.mesh)
+    this.mesh.position.set(this.position.x, this.position.y, this.position.z)
+    return this.mesh
   }
 
   update() {
