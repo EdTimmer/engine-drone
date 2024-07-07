@@ -132,6 +132,33 @@ export default class Physics {
     return new CANNON.Trimesh(vertices, indices);
   }
 
+  setCeilingBody(meshPosition, meshQuaternion) {
+    this.ceilingBody = new CANNON.Body({
+      mass: 0, // Static body
+      shape: new CANNON.Plane(),
+      position: new CANNON.Vec3(meshPosition.x, meshPosition.y, meshPosition.z),
+    });
+
+    this.ceilingBody.quaternion.setFromEuler(Math.PI / 2, 0, 0);
+    this.ceilingBody.quaternion.copy(meshQuaternion);
+
+    this.world.addBody(this.ceilingBody);
+  }
+
+  setFloorBody(meshPosition, meshQuaternion) {
+    console.log('inside setFloorBody');
+    this.floorBody = new CANNON.Body({
+      mass: 0, // Static body
+      shape: new CANNON.Plane(),
+      position: new CANNON.Vec3(meshPosition.x, meshPosition.y, meshPosition.z),
+    });
+
+    this.floorBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
+    this.floorBody.quaternion.copy(meshQuaternion);
+
+    this.world.addBody(this.floorBody);
+  }
+
   update() {
     this.delta = this.experience.time.getDelta();
     this.world.step(this.timeStep, this.delta, 3);

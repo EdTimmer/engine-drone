@@ -1,12 +1,12 @@
 import * as THREE from 'three'
 import Experience from '../../Experience'
 
-export default class Wall {
+export default class Floor {
   constructor() {
     this.experience = new Experience()
     this.scene = this.experience.scene
     this.radius = 400;
-    this.height = 250;
+    // this.height = 250;
     this.showWireframe = true;
     this.physics = this.experience.physics;
 
@@ -17,6 +17,7 @@ export default class Wall {
   }
 
   setMaterial() {
+    console.log('inside Floor.js setMaterial');
     this.material = new THREE.MeshBasicMaterial({ 
       color: 0xffff00, 
       wireframe: this.showWireframe, 
@@ -26,17 +27,20 @@ export default class Wall {
   }
 
   setGeometry() {
-    this.geometry = new THREE.CylinderGeometry(this.radius, this.radius, this.height, 32, 1, true);
+    this.geometry = new THREE.PlaneGeometry(this.radius * 2, this.radius * 2);
   }
 
   setMesh() {
     this.mesh = new THREE.Mesh(this.geometry, this.material);
+    this.mesh.rotation.x = -Math.PI / 2;
+    this.mesh.position.set(0, -100, 0);
+
     this.meshPosition = this.mesh.position;
     this.meshQuaternion = this.mesh.quaternion;
     this.scene.add(this.mesh);
   } 
 
   setPhysics() {
-    this.physics.setWallBody(this.geometry, this.meshPosition, this.meshQuaternion)
+    this.physics.setFloorBody(this.meshPosition, this.meshQuaternion)
   } 
 }

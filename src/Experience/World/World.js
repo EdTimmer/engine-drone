@@ -3,6 +3,8 @@ import Environment from "./Environment"
 import EngineGroup from "./EngineGroup/EngineGroup"
 import Target from "./Target"
 import Wall from "./ArenaGroup/Wall"
+import Ceiling from "./ArenaGroup/Ceiling"
+import Floor from "./ArenaGroup/Floor"
 
 export default class World {
   constructor() {
@@ -26,6 +28,8 @@ export default class World {
       this.engineGroup = new EngineGroup()
       this.makeTargets()
       this.wall = new Wall();
+      this.ceiling = new Ceiling();
+      this.floor = new Floor();
       this.environment = new Environment()
            
       // Pass engineGroup to the camera
