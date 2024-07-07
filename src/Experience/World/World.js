@@ -29,7 +29,6 @@ export default class World {
     if (this.debug.active) {
       this.debugFolder = this.debug.ui.addFolder('world')
       this.debugFolder.add(this, 'showWireframe').name('Show Wireframe').onChange(this.updateWireframe.bind(this))
-
     }
 
     // Wait for resources
@@ -63,7 +62,6 @@ export default class World {
     if (this.ceiling) this.ceiling.setWireframe(value)
     if (this.floor) this.floor.setWireframe(value)
     if (this.obstacle) this.obstacle.setWireframe(value)
-    // If you have other objects to update, add them here
   }
 
   update() {

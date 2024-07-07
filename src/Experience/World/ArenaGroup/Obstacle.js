@@ -50,7 +50,6 @@ export default class Obstacle {
   }
 
   update() {    
-    // console.log('this.experience.time.getElapsedTime() :>> ', this.experience.time.getElapsedTime());
     this.mesh.position.x = 370 * Math.cos(this.experience.time.getElapsedTime() * 0.002);
     this.mesh.position.y = 0; // Keep it on the horizontal plane
     this.mesh.position.z = 370 * Math.sin(this.experience.time.getElapsedTime() * 0.002);

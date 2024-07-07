@@ -6,7 +6,6 @@ export default class Ceiling {
     this.experience = new Experience()
     this.scene = this.experience.scene
     this.radius = 400;
-    // this.height = 250;
     this.showWireframe = false;
     this.physics = this.experience.physics;
 
