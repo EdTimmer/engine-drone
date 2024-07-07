@@ -35,7 +35,7 @@ export default class Experience {
     this.renderer = new Renderer()
     this.world = new World()
     this.physics = new Physics()
-    // this.elapsedTime = this.time.getElapsedTime()
+    this.elapsedTime = this.time.getElapsedTime()
 
     // Sizes resize event
     this.sizes.on('resize', () => {

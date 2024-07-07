@@ -146,7 +146,6 @@ export default class Physics {
   }
 
   setFloorBody(meshPosition, meshQuaternion) {
-    console.log('inside setFloorBody');
     this.floorBody = new CANNON.Body({
       mass: 0, // Static body
       shape: new CANNON.Plane(),
@@ -157,6 +156,24 @@ export default class Physics {
     this.floorBody.quaternion.copy(meshQuaternion);
 
     this.world.addBody(this.floorBody);
+  }
+
+  setObstacleBody(meshPosition, meshQuaternion, radius, height) {
+    this.obstacleBody = new CANNON.Body({
+      mass: 0, // Static body
+      shape: new CANNON.Cylinder(radius, radius, height, 32),
+      position: new CANNON.Vec3(meshPosition.x, meshPosition.y, meshPosition.z),
+    });
+
+    // Rotate the cylinder body to align with the Three.js mesh
+    const quat = new CANNON.Quaternion();
+    quat.setFromEuler(Math.PI / 2, 0, 0, 'XYZ'); // Rotate around the X-axis
+    this.obstacleBody.quaternion.copy(quat);
+
+    this.obstacleBody.position.copy(meshPosition);
+    this.obstacleBody.quaternion.copy(meshQuaternion);
+
+    this.world.addBody(this.obstacleBody);
   }
 
   update() {

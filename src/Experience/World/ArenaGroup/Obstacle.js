@@ -1,19 +1,21 @@
 import * as THREE from 'three'
 import Experience from '../../Experience'
 
-export default class Ceiling {
+export default class Obstacle {
   constructor() {
     this.experience = new Experience()
     this.scene = this.experience.scene
-    this.radius = 400;
-    // this.height = 250;
-    this.showWireframe = false;
+    this.radius = 20;
+    this.height = 200;
     this.physics = this.experience.physics;
+    this.elapsedTime = this.experience.elapsedTime;
+    this.showWireframe = false;
 
     this.setMaterial()
     this.setGeometry()
     this.setMesh()
     this.setPhysics()
+    this.update()
   }
 
   setMaterial() {
@@ -26,13 +28,12 @@ export default class Ceiling {
   }
 
   setGeometry() {
-    this.geometry = new THREE.PlaneGeometry(this.radius * 2, this.radius * 2);
+    this.geometry = new THREE.CylinderGeometry(this.radius, this.radius, this.height, 32);
   }
 
   setMesh() {
     this.mesh = new THREE.Mesh(this.geometry, this.material);
-    this.mesh.rotation.x = Math.PI / 2;
-    this.mesh.position.set(0, 100, 0);
+    this.mesh.position.set(370, 0, 0);
 
     this.meshPosition = this.mesh.position;
     this.meshQuaternion = this.mesh.quaternion;
@@ -40,11 +41,19 @@ export default class Ceiling {
   } 
 
   setPhysics() {
-    this.physics.setCeilingBody(this.meshPosition, this.meshQuaternion)
+    this.physics.setObstacleBody(this.meshPosition, this.meshQuaternion, this.radius, this.height)
   }
 
   setWireframe(value) {
     this.material.wireframe = value;
     this.material.opacity = value ? 1 : 0;
+  }
+
+  update() {    
+    // console.log('this.experience.time.getElapsedTime() :>> ', this.experience.time.getElapsedTime());
+    this.mesh.position.x = 370 * Math.cos(this.experience.time.getElapsedTime() * 0.002);
+    this.mesh.position.y = 0; // Keep it on the horizontal plane
+    this.mesh.position.z = 370 * Math.sin(this.experience.time.getElapsedTime() * 0.002);
+    this.physics.obstacleBody.position.copy(this.mesh.position);
   }
 }

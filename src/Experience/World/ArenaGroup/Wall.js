@@ -7,7 +7,7 @@ export default class Wall {
     this.scene = this.experience.scene
     this.radius = 400;
     this.height = 250;
-    this.showWireframe = true;
+    this.showWireframe = false;
     this.physics = this.experience.physics;
 
     this.setMaterial()
@@ -21,7 +21,7 @@ export default class Wall {
       color: 0xffff00, 
       wireframe: this.showWireframe, 
       transparent: true, 
-      opacity: 1,
+      opacity: this.showWireframe ? 1 : 0,
     });
   }
 
@@ -38,5 +38,10 @@ export default class Wall {
 
   setPhysics() {
     this.physics.setWallBody(this.geometry, this.meshPosition, this.meshQuaternion)
-  } 
+  }
+
+  setWireframe(value) {
+    this.material.wireframe = value;
+    this.material.opacity = value ? 1 : 0;
+  }
 }
