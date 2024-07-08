@@ -56,7 +56,6 @@ export default class World {
   }
 
   updateWireframe(value) {
-    console.log('value :>> ', value);
     // Update the wireframe property for all relevant objects
     if (this.wall) this.wall.setWireframe(value)
     if (this.ceiling) this.ceiling.setWireframe(value)

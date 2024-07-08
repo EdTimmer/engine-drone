@@ -82,13 +82,13 @@ export default class EngineGroup {
     }
     if (this.keyStates['w']) {
       const top = new THREE.Vector3(0, 0.05, 0);
-      if (this.instance.position.y < 50) {
+      if (this.instance.position.y < 100) {
         this.instance.position.add(top.multiplyScalar(verticalSpeed * deltaTime));
       }
     }
     if (this.keyStates['s']) {
       const down = new THREE.Vector3(0, -0.05, 0);
-      if (this.instance.position.y > -50) {
+      if (this.instance.position.y > -100) {
         this.instance.position.add(down.multiplyScalar(verticalSpeed * deltaTime));
       }
     }

@@ -1,21 +1,28 @@
 import CANNON from 'cannon';
 import * as THREE from 'three';
 import Experience from '../Experience';
+import Clone from './Clone';
 
 export default class Physics {
   constructor() {
     this.experience = new Experience();
+    this.scene = this.experience.scene;
     this.targetPositions = this.experience.world.targetPositions;
     this.timeStep = 1 / 60;
     this.clock = new THREE.Clock();
     this.lastCollisionTime = 0;
     this.targetBodies = [];
     this.targetMeshes = this.experience.world.targetMeshes;
+    this.cloneMeshesAndBodies = [];
+    this.maxAngularVelocity = 5;
+    this.numberOfClonesOnHit = 3;
+    this.maxClonesNumber = 40;
 
     this.setWorld();
     this.setMaterials();
     this.setEngineBody();
     this.setTargetBodies();
+    this.setAngularVelocity();
   }
 
   setWorld() {
@@ -56,13 +63,14 @@ export default class Physics {
         position: new CANNON.Vec3(position.x, position.y, position.z),
       });
       this.targetBodies.push(targetBody);
-      targetBody.addEventListener('collide', (event) => this.handleCollision(event, targetBody.id));
+      
+      targetBody.addEventListener('collide', (event) => this.handleTargetAndEngineCollision(event, targetBody.id, targetBody.position));
       
       this.world.addBody(targetBody);
     })
   }
 
-  handleCollision(event, targetBodyId) {
+  handleTargetAndEngineCollision(event, targetBodyId, targetBodyPosition) {
     const otherBody = event.body;
     const contact = event.contact;
     let normal = null;
@@ -73,6 +81,15 @@ export default class Physics {
         return; // Exit if less than 100 milliseconds have passed
       }
       this.lastCollisionTime = currentCollisionTime;
+
+      // Make Clones
+      for (let i = 0; i < this.numberOfClonesOnHit; i++) {
+        if (this.cloneMeshesAndBodies.length < this.maxClonesNumber) {
+          const clone = new Clone(targetBodyPosition);
+          this.scene.add(clone.mesh);
+          this.makeCloneBody(clone.mesh); 
+        }
+      }           
     }
 
     // Get the normal of the contact. Make sure it points away from the surface of the stationary body
@@ -91,6 +108,36 @@ export default class Physics {
 
   applyImpulse(body, impulse, contactPoint) {
     body.applyImpulse(impulse, contactPoint);
+  }
+
+  makeCloneBody(cloneMesh) {
+    const cloneBody = new CANNON.Body({
+      mass: 1,
+      shape: new CANNON.Sphere(4),
+      material: this.defaultMaterial,
+      position: new CANNON.Vec3(cloneMesh.position.x, cloneMesh.position.y, cloneMesh.position.z),
+    });
+    this.cloneMeshesAndBodies.push({ cloneMesh, cloneBody });
+    this.world.addBody(cloneBody);
+  }
+
+  setAngularVelocity() {
+    this.world.addEventListener('postStep', () => {
+      this.cloneMeshesAndBodies.forEach((cloneMeshAndBody) => {
+        const body = cloneMeshAndBody.cloneBody;
+        const angularSpeed = body.angularVelocity.length();
+        if (angularSpeed > this.maxAngularVelocity) {
+          body.angularVelocity.scale(this.maxAngularVelocity / body.angularVelocity.length(), body.angularVelocity);
+        }
+      })
+
+      this.targetBodies.forEach((targetBody) => {
+        const angularSpeed = targetBody.angularVelocity.length();
+        if (angularSpeed > this.maxAngularVelocity) {
+          targetBody.angularVelocity.scale(this.maxAngularVelocity / targetBody.angularVelocity.length(), targetBody.angularVelocity);
+        }
+      })
+    });
   }
 
   // ARENA
@@ -190,6 +237,13 @@ export default class Physics {
       this.targetBodies.forEach((targetBody) => {
         this.targetMeshes[targetBody.id - 1].position.copy(targetBody.position);
         this.targetMeshes[targetBody.id - 1].quaternion.copy(targetBody.quaternion);
+      })
+    }
+    // Have clone mesh follow the clone body
+    if (this.cloneMeshesAndBodies.length > 0) {
+      this.cloneMeshesAndBodies.forEach((cloneMeshAndBody) => {
+        cloneMeshAndBody.cloneMesh.position.copy(cloneMeshAndBody.cloneBody.position);
+        cloneMeshAndBody.cloneMesh.quaternion.copy(cloneMeshAndBody.cloneBody.quaternion);
       })
     }
   }
