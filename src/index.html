@@ -1,13 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Engine</title>
-    <link rel="stylesheet" href="./style.css">
-</head>
-<body>
-    <canvas class="webgl"></canvas>
-    <script type="module" src="./script.js"></script>
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Engine</title>
+        <link rel="stylesheet" href="./style.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    </head>
+    <body>
+        <!-- <div id="loading-screen">&#128125; &#128125; &#128125;...</div> -->
+
+        <!-- <div class="reset-container">
+            <button class="esc-key-button" id="escape-key" aria-label="Escape button" title="Reset targets">ESC</button>
+        </div> -->
+
+        <div class="wKey">
+            <button class="letter-button" id="w-key" aria-label="W button" title="Move upward">W</button>
+        </div>
+
+        <div class="sKey">
+            <button class="letter-button" id="s-key" aria-label="S button" title="Move downward">S</button>
+        </div>
+
+        <!-- <div class="counter-container">
+            <div class="count-display" id="variable-display" aria-label="Escape button" title="Reset targets">
+                <script type="module" src="script.js"></script>
+            </div>
+        </div> -->
+
+        <div class="arrowsTop">
+            <button class="arrow" id="arrow-up" aria-label="Up arrow" title="Move forward">
+                <i class="material-icons icon">arrow_upward</i>
+            </button>
+        </div>
+        <div class="arrowsBottom">
+            <button class="arrow" id="arrow-left" aria-label="Left arrow" title="Turn left">
+                <i class="material-icons icon">arrow_back</i>
+            </button>
+
+            <button class="arrow" id="arrow-down" aria-label="Down arrow" title="Move backward">
+                <i class="material-icons icon">arrow_downward</i>
+            </button>
+
+            <button class="arrow" id="arrow-right" aria-label="Right arrow" title="Turn right">
+                <i class="material-icons icon">arrow_forward</i>
+            </button>
+        </div>
+
+        <canvas class="webgl"></canvas>
+        <script type="module" src="./script.js"></script>
+    </body>
 </html>

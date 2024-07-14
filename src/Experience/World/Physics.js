@@ -38,7 +38,7 @@ export default class Physics {
       this.defaultMaterial,
       {
         friction: 0.9,
-        restitution: 0.7,
+        restitution: 0.001,
       }
     );
     this.world.addContactMaterial(this.defaultContactMaterial);
@@ -57,7 +57,7 @@ export default class Physics {
   setTargetBodies() {
     this.targetPositions.forEach((position) => {
       const targetBody = new CANNON.Body({
-        mass: 1,
+        mass: 5,
         shape: new CANNON.Sphere(4),
         material: this.defaultMaterial,
         position: new CANNON.Vec3(position.x, position.y, position.z),
@@ -100,7 +100,7 @@ export default class Physics {
     }
 
     // Calculate impulse strength
-    const impulseStrength = normal.scale(10);
+    const impulseStrength = normal.scale(1);
 
     // Apply the impulse to the stationary body at the contact point
     this.applyImpulse(event.body, impulseStrength, contact.ri);

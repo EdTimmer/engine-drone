@@ -63,32 +63,110 @@ export default class OuterGroup {
     this.eventListener.addKeyboardListeners();
     this.eventListener.on('arrowKeyDown', this.handleArrowKeyDown.bind(this));
     this.eventListener.on('arrowKeyUp', this.handleArrowKeyUp.bind(this));
+
+    // Get the arrow elements
+    const arrowUp = document.getElementById('arrow-up');
+    const arrowDown = document.getElementById('arrow-down');
+    const arrowLeft = document.getElementById('arrow-left');
+    const arrowRight = document.getElementById('arrow-right');
+
+    const wKey = document.getElementById('w-key');
+    const sKey = document.getElementById('s-key');
+
+    // Function to handle keydown event
+    const handleKeyDown = (key) => {
+      switch (key) {
+        case 'ArrowUp':
+          arrowUp.classList.add('active');
+          break;
+        case 'ArrowDown':
+          arrowDown.classList.add('active');
+          break;
+        case 'ArrowLeft':
+          arrowLeft.classList.add('active');
+          break;
+        case 'ArrowRight':
+          arrowRight.classList.add('active');
+          break;
+        case 'w':
+          wKey.classList.add('active');
+          break;
+        case 's':
+          sKey.classList.add('active');
+          break;
+      }
+
+      this.handleArrowKeyDown({ key });
+    };
+
+    // Function to handle keyup event
+    const handleKeyUp = (key) => {
+      switch (key) {
+        case 'ArrowUp':
+          arrowUp.classList.remove('active');
+          break;
+        case 'ArrowDown':
+          arrowDown.classList.remove('active');
+          break;
+        case 'ArrowLeft':
+          arrowLeft.classList.remove('active');
+          break;
+        case 'ArrowRight':
+          arrowRight.classList.remove('active');
+          break;
+        case 'w':
+          wKey.classList.remove('active');
+          break;
+        case 's':
+          sKey.classList.remove('active');
+          break;
+      }
+
+      this.handleArrowKeyUp({ key });
+    };
+
+    // Mouse event listeners for screen buttons
+    arrowUp.addEventListener('mousedown', () => handleKeyDown('ArrowUp'));
+    arrowUp.addEventListener('mouseup', () => handleKeyUp('ArrowUp'));
+    arrowDown.addEventListener('mousedown', () => handleKeyDown('ArrowDown'));
+    arrowDown.addEventListener('mouseup', () => handleKeyUp('ArrowDown'));
+    arrowLeft.addEventListener('mousedown', () => handleKeyDown('ArrowLeft'));
+    arrowLeft.addEventListener('mouseup', () => handleKeyUp('ArrowLeft'));
+    arrowRight.addEventListener('mousedown', () => handleKeyDown('ArrowRight'));
+    arrowRight.addEventListener('mouseup', () => handleKeyUp('ArrowRight'));
+
+    wKey.addEventListener('mousedown', () => handleKeyDown('w'));
+    wKey.addEventListener('mouseup', () => handleKeyUp('w'));
+    sKey.addEventListener('mousedown', () => handleKeyDown('s'));
+    sKey.addEventListener('mouseup', () => handleKeyUp('s'));
   }
 
   handleArrowKeyDown(event) {
-    if ((event.key === 'ArrowUp' || event.key === 'w') && !this.upAnimationInProgress) {
+    const key = event.key || event;
+    if ((key === 'ArrowUp' || key === 'w') && !this.upAnimationInProgress) {
       this.startUpTime = performance.now();
       this.upAnimationInProgress = true;
-    } else if (event.key === 'ArrowLeft' && !this.leftAnimationInProgress) {
+    } else if (key === 'ArrowLeft' && !this.leftAnimationInProgress) {
       this.startLeftTime = performance.now();
       this.leftAnimationInProgress = true;
-    } else if (event.key === 'ArrowRight' && !this.rightAnimationInProgress) {
+    } else if (key === 'ArrowRight' && !this.rightAnimationInProgress) {
       this.startRightTime = performance.now();
       this.rightAnimationInProgress = true;
-    } else if ((event.key === 'ArrowDown' || event.key === 's') && !this.downAnimationInProgress) {
+    } else if ((key === 'ArrowDown' || key === 's') && !this.downAnimationInProgress) {
       this.startDownTime = performance.now();
       this.downAnimationInProgress = true;
     }
   }
 
   handleArrowKeyUp(event) {
-    if ((event.key === 'ArrowUp' || event.key === 'w')) {
+    const key = event.key || event;
+    if ((key === 'ArrowUp' || key === 'w')) {
       this.upAnimationInProgress = false;
-    } else if (event.key === 'ArrowLeft') {
+    } else if (key === 'ArrowLeft') {
       this.leftAnimationInProgress = false;
-    } else if (event.key === 'ArrowRight') {
+    } else if (key === 'ArrowRight') {
       this.rightAnimationInProgress = false;
-    } else if ((event.key === 'ArrowDown' || event.key === 's')) {
+    } else if ((key === 'ArrowDown' || key === 's')) {
       this.downAnimationInProgress = false;
     }
   }
