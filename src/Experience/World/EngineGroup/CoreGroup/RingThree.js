@@ -19,6 +19,7 @@ export default class RingThree {
 
   getMesh() {
     this.mesh = new THREE.Mesh(this.geometry, this.material);
+    // this.mesh.rotation.x = Math.PI / 2;
     return this.mesh;
   }
 }

@@ -17,7 +17,7 @@ export default class Target {
   }
 
   setMaterial() {
-    this.material = new THREE.MeshPhysicalMaterial({ emissive: 'black', roughness: 0, metalness: 0.2 })
+    this.material = new THREE.MeshPhysicalMaterial({ emissive: 'black' })
     this.material.transmission = 0
     this.material.ior = 1.592
     this.material.thickness = 0.2379

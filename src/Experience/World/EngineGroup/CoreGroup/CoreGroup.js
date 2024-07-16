@@ -5,6 +5,7 @@ import OuterSphere from "./OuterSphere";
 import RingOne from "./RingOne";
 import RingTwo from "./RingTwo";
 import RingThree from "./RingThree";
+import { PI } from "three/examples/jsm/nodes/Nodes.js";
 
 export default class CoreGroup {
   constructor() {
@@ -58,7 +59,15 @@ export default class CoreGroup {
     return this.instance;
   }
 
+  // removeOuterSphere() {
+  //   this.outerSphere.removeOuterSphere();
+  // }
+
   update() {
+    // if (this.innerSphere) {
+    //   this.innerSphere.mesh.rotation.y += -0.05;
+    //   // this.innerSphere.mesh.rotation.x += -0.005;
+    // }
     if (this.ringOne) {
       this.ringOne.mesh.rotation.y += 0.02;
       this.ringOne.mesh.rotation.x += -0.005;
@@ -68,7 +77,7 @@ export default class CoreGroup {
       this.ringTwo.mesh.rotation.x += -0.02;
     } 
     if (this.ringThree) {
-      this.ringThree.mesh.rotation.y += 0.02;
+      this.ringThree.mesh.rotation.y -= 0.02;
       this.ringThree.mesh.rotation.x += -0.007;
     }
   }

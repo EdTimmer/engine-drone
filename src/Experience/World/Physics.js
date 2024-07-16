@@ -14,9 +14,11 @@ export default class Physics {
     this.targetBodies = [];
     this.targetMeshes = this.experience.world.targetMeshes;
     this.cloneMeshesAndBodies = [];
+    // this.innerSphere = this.experience.world.engineGroup.coreGroup.innerSphere;
     this.maxAngularVelocity = 5;
     this.numberOfClonesOnHit = 3;
-    this.maxClonesNumber = 40;
+    this.maxClonesNumber = 100;
+    this.isFirstCloneCollision = true;
 
     this.setWorld();
     this.setMaterials();
@@ -38,7 +40,7 @@ export default class Physics {
       this.defaultMaterial,
       {
         friction: 0.9,
-        restitution: 0.001,
+        restitution: 0.9,
       }
     );
     this.world.addContactMaterial(this.defaultContactMaterial);
@@ -89,7 +91,7 @@ export default class Physics {
           this.scene.add(clone.mesh);
           this.makeCloneBody(clone.mesh); 
         }
-      }           
+      }
     }
 
     // Get the normal of the contact. Make sure it points away from the surface of the stationary body
@@ -118,6 +120,9 @@ export default class Physics {
       position: new CANNON.Vec3(cloneMesh.position.x, cloneMesh.position.y, cloneMesh.position.z),
     });
     this.cloneMeshesAndBodies.push({ cloneMesh, cloneBody });
+
+    cloneBody.addEventListener('collide', (event) => this.handleCloneAndEngineCollision(event, cloneBody.id));
+
     this.world.addBody(cloneBody);
   }
 
@@ -138,6 +143,54 @@ export default class Physics {
         }
       })
     });
+  }
+
+  handleCloneAndEngineCollision(event, cloneBodyId) {
+    const otherBody = event.body;
+    const contact = event.contact;
+    let normal = null;
+    const currentCollisionTime = new Date();
+
+    if (otherBody.id === this.engineBody.id) {
+      // Do not register collisions that are too close in time
+      if (currentCollisionTime - this.lastCollisionTime < 100) {
+        return; // Exit if less than 100 milliseconds have passed
+      }
+      this.lastCollisionTime = currentCollisionTime; 
+
+      // Change the inner sphere to copy the hit clone mesh
+      const hitCloneMeshAndBody = this.cloneMeshesAndBodies.find((cloneMeshAndBody) => cloneMeshAndBody.cloneBody.id === cloneBodyId);
+      this.innerSphereMaterial = this.experience.world.engineGroup.coreGroup.innerSphere.material;
+      this.innerSphereMaterial.emissive = hitCloneMeshAndBody.cloneMesh.material.emissive;
+      
+      this.innerSphereMaterial.opacity = 1;
+      this.innerSphereMaterial.color = hitCloneMeshAndBody.cloneMesh.material.color;
+      this.innerSphereMaterial.roughness = 0;
+      this.innerSphereMaterial.metalness = 0.2;
+      this.innerSphereMaterial.ior = 1.592;
+
+      if (this.isFirstCloneCollision) {
+        this.isFirstCloneCollision = false;
+        this.experience.world.engineGroup.coreGroup.innerSphere.mesh.geometry.scale(1.2, 1.2, 1.2);
+      }
+      
+      this.experience.world.engineGroup.coreGroup.outerSphere.material.transparent = true;
+      this.experience.world.engineGroup.coreGroup.outerSphere.material.opacity = 0;
+      this.experience.world.engineGroup.coreGroup.outerSphere.material.transmission = 0;
+      
+    // Get the normal of the contact. Make sure it points away from the surface of the stationary body
+      if (contact.bi.id === cloneBodyId) {
+        normal = contact.ni;
+      } else {
+        normal = contact.ni.scale(-1);
+      }
+
+      // Calculate impulse strength
+      const impulseStrength = normal.scale(1);
+
+      // Apply the impulse to the stationary body at the contact point
+      this.applyImpulse(event.body, impulseStrength, contact.ri);
+    }
   }
 
   // ARENA
@@ -245,6 +298,10 @@ export default class Physics {
         cloneMeshAndBody.cloneMesh.position.copy(cloneMeshAndBody.cloneBody.position);
         cloneMeshAndBody.cloneMesh.quaternion.copy(cloneMeshAndBody.cloneBody.quaternion);
       })
+    }
+    if (this.cloneMeshesAndBodies.length === 60) {
+      console.log('60 clones');
+      this.world.gravity.set(-20, 0, 0)
     }
   }
 }
