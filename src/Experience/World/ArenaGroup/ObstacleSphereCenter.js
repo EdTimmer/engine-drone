@@ -1,12 +1,10 @@
 import * as THREE from 'three'
 import Experience from '../../Experience'
 
-export default class Obstacle {
+export default class ObstacleSphereCenter {
   constructor() {
     this.experience = new Experience()
     this.scene = this.experience.scene
-    this.radius = 20;
-    this.height = 200;
     this.physics = this.experience.physics;
     this.elapsedTime = this.experience.elapsedTime;
     this.showWireframe = false;
@@ -28,12 +26,12 @@ export default class Obstacle {
   }
 
   setGeometry() {
-    this.geometry = new THREE.CylinderGeometry(this.radius, this.radius, this.height, 32);
+    this.geometry = new THREE.SphereGeometry(36, 32, 32);
   }
 
   setMesh() {
     this.mesh = new THREE.Mesh(this.geometry, this.material);
-    this.mesh.position.set(370, 0, 0);
+    this.mesh.position.set(410, 0, 0);
 
     this.meshPosition = this.mesh.position;
     this.meshQuaternion = this.mesh.quaternion;
@@ -41,7 +39,7 @@ export default class Obstacle {
   } 
 
   setPhysics() {
-    this.physics.setObstacleBody(this.meshPosition, this.meshQuaternion, this.radius, this.height)
+    this.physics.setObstacleSphereCenterBody(this.meshPosition, this.meshQuaternion)
   }
 
   setWireframe(value) {
@@ -50,12 +48,12 @@ export default class Obstacle {
   }
 
   update() {    
-    this.mesh.position.x = 370 * Math.cos(this.experience.time.getElapsedTime() * 0.002);
+    this.mesh.position.x = 430 * Math.cos(this.experience.time.getElapsedTime() * 0.0005);
     this.mesh.position.y = 0; // Keep it on the horizontal plane
-    this.mesh.position.z = 370 * Math.sin(this.experience.time.getElapsedTime() * 0.002);
+    this.mesh.position.z = 430 * Math.sin(-this.experience.time.getElapsedTime() * 0.0005);
     // this.mesh.rotation.y = -this.experience.time.getElapsedTime() * 0.1;
     // this.mesh.rotation.z += 0.01
     // this.mesh.rotation.x += 0.01
-    this.physics.obstacleBody.position.copy(this.mesh.position);
+    this.physics.obstacleSphereCenterBody.position.copy(this.mesh.position);
   }
 }

@@ -12,13 +12,14 @@ import Physics from './World/Physics'
 let instance = null
 
 export default class Experience {
+  static instance = null;
+
   constructor(canvas) {
     // Singleton
-    if (instance) {
-      return instance
-    } else {
-      instance = this
-    }
+    if (Experience.instance) {
+      return Experience.instance
+    } 
+    Experience.instance = this
     // Global access
     window.experience = this
 
@@ -46,7 +47,39 @@ export default class Experience {
     this.time.on('tick', () => {
       this.update();
     })
+
+    // Listen for Escape key press
+    this.handleEscapeKeyPress = this.handleEscapeKeyPress.bind(this);
+    window.addEventListener('keydown', this.handleEscapeKeyPress);
+
+    // Listen for button click
+    this.handleEscapeButtonClick = this.handleEscapeButtonClick.bind(this);
+    const escapeButton = document.getElementById('escape-key');
+    if (escapeButton) {
+      escapeButton.addEventListener('click', this.handleEscapeButtonClick);
+      // console.log('Added click event listener for Escape button.');
+    }
   }
+
+  static restart(canvas) {
+    if (Experience.instance) {
+      Experience.instance.destroy();
+      Experience.instance = null;
+    }
+    new Experience(canvas);
+  }
+
+  handleEscapeKeyPress(event) {
+    if (event.key === 'Escape') {
+      Experience.restart(this.canvas);
+    }
+  }
+
+  handleEscapeButtonClick() {
+    // console.log('Escape button clicked.');
+    Experience.restart(this.canvas);
+  }
+
 
   resize() {
     this.camera.resize()
@@ -80,18 +113,24 @@ export default class Experience {
       }
     })
 
-    this.camera.controls.dispose()
-    this.renderer.instance.dispose()
-    // if using post-processing, dispose of EffectComposer, its WebGLRenderTarget, and all passes
+    if (this.camera.controls) {
+      this.camera.controls.dispose();
+    }
+    this.renderer.instance.dispose();
 
     if (this.debug.active) {
-      this.debug.ui.destroy()
+      this.debug.ui.destroy();
     }
 
     // no need to destroy canvas
 
     // remove event listeners
-    // window.removeEventListener('resize', this.resize)
-
+    window.removeEventListener('keydown', this.handleEscapeKeyPress);
+    const escapeButton = document.getElementById('escape-key');
+    if (escapeButton) {
+      escapeButton.removeEventListener('click', this.handleEscapeButtonClick);
+      // console.log('Removed click event listener for Escape button.');
+    }
+    // console.log('Removed keydown event listener for Escape key.');
   }
 }

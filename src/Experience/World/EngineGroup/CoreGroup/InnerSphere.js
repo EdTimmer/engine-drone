@@ -7,9 +7,9 @@ export default class InnerSphere {
     this.debug = this.experience.debug;
 
     // Debug
-    if (this.debug.active) {
-      this.debugFolder = this.debug.ui.addFolder('Inner Sphere')
-    }
+    // if (this.debug.active) {
+    //   this.debugFolder = this.debug.ui.addFolder('Inner Sphere')
+    // }
 
     this.setGeometry()
     this.setMaterial()
@@ -22,28 +22,34 @@ export default class InnerSphere {
 
   setMaterial() {
 
-    this.material = new THREE.MeshPhysicalMaterial({ emissive: '#D0E1E0', color: '#AAEEE6' })
+    // this.material = new THREE.MeshPhysicalMaterial({ emissive: '#F0C7C7', color: '#AAEEE6' })
+    // this.material.transmission = 0
+    // this.material.ior = 0.38
+    // this.material.thickness = 0
+    // this.material.metalness = 0
+    // this.material.roughness = 1
+    // this.material.transparent = false
+    // this.material.opacity = 0
+    this.material = new THREE.MeshPhysicalMaterial({ emissive: 'black' })
     this.material.transmission = 0
-    this.material.ior = 0.38
-    this.material.thickness = 0
-    this.material.metalness = 0
-    this.material.roughness = 1
-    this.material.transparent = false
-    this.material.opacity = 0
+    this.material.ior = 1.592
+    // this.material.thickness = 0.2379
+    this.material.color = new THREE.Color('white')
+    this.material.metalness = 0.8
+    this.material.roughness = 0
 
      // Debug
-     if (this.debug.active) {
-      this.debugFolder.add(this.material, 'opacity').min(0).max(1).step(0.01).name('Opacity')
-      this.debugFolder.add(this.material, 'metalness').min(0).max(1).step(0.01).name('Metalness')
-      this.debugFolder.add(this.material, 'roughness').min(0).max(1).step(0.01).name('Roughness')
-      this.debugFolder.add(this.material, 'ior').min(0).max(2).step(0.01).name('IOR')
-      this.debugFolder.add(this.material, 'transmission').min(0).max(1).step(0.01).name('Transmission')
-      this.debugFolder.add(this.material, 'thickness').min(0).max(1).step(0.01).name('Thickness')
-      this.debugFolder.addColor(this.material, 'color').name('Color')
-      this.debugFolder.addColor(this.material, 'emissive').name('Emissive')
-      this.debugFolder.add(this.material, 'transparent').name('Transparent')
-
-    }
+    //  if (this.debug.active) {
+    //   this.debugFolder.add(this.material, 'opacity').min(0).max(1).step(0.01).name('Opacity')
+    //   this.debugFolder.add(this.material, 'metalness').min(0).max(1).step(0.01).name('Metalness')
+    //   this.debugFolder.add(this.material, 'roughness').min(0).max(1).step(0.01).name('Roughness')
+    //   this.debugFolder.add(this.material, 'ior').min(0).max(2).step(0.01).name('IOR')
+    //   this.debugFolder.add(this.material, 'transmission').min(0).max(1).step(0.01).name('Transmission')
+    //   this.debugFolder.add(this.material, 'thickness').min(0).max(1).step(0.01).name('Thickness')
+    //   this.debugFolder.addColor(this.material, 'color').name('Color')
+    //   this.debugFolder.addColor(this.material, 'emissive').name('Emissive')
+    //   this.debugFolder.add(this.material, 'transparent').name('Transparent')
+    // }
   }
 
   getMesh() {

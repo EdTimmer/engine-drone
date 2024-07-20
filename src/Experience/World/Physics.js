@@ -16,9 +16,13 @@ export default class Physics {
     this.cloneMeshesAndBodies = [];
     // this.innerSphere = this.experience.world.engineGroup.coreGroup.innerSphere;
     this.maxAngularVelocity = 5;
-    this.numberOfClonesOnHit = 3;
+    this.numberOfClonesOnHit = 5;
     this.maxClonesNumber = 100;
     this.isFirstCloneCollision = true;
+    this.clonesInitialized = false; // Flag to track if clones have been initialized
+    this.targetBodyToRemove = null;
+    this.targetToRemove = { mesh: null, body: null };
+    this.isGameOver = false;
 
     this.setWorld();
     this.setMaterials();
@@ -93,7 +97,6 @@ export default class Physics {
         }
       }
     }
-
     // Get the normal of the contact. Make sure it points away from the surface of the stationary body
     if (contact.bi.id === targetBodyId) {
       normal = contact.ni;
@@ -106,6 +109,22 @@ export default class Physics {
 
     // Apply the impulse to the stationary body at the contact point
     this.applyImpulse(event.body, impulseStrength, contact.ri);
+
+    // Remove target mesh and body
+    this.targetMeshes.forEach((targetMesh, index) => {
+      if (targetBodyId === this.targetBodies[index].id) {
+        this.targetToRemove = { mesh: targetMesh, body: this.targetBodies[index] };
+
+        // console.log('targetBodyId :>> ', targetBodyId);
+        // console.log('targetMesh :>> ', targetMesh);
+        // this.targetMeshToRemove = targetMesh;
+        // this.targetBodyToRemove = targetBodyId;
+        // this.scene.remove(targetMesh);
+        // this.world.remove(this.targetBodies[index]);
+        // this.targetMeshes.splice(index, 1);
+        // this.targetBodies.splice(index, 1);
+      }
+    });
   }
 
   applyImpulse(body, impulse, contactPoint) {
@@ -171,12 +190,12 @@ export default class Physics {
 
       if (this.isFirstCloneCollision) {
         this.isFirstCloneCollision = false;
-        this.experience.world.engineGroup.coreGroup.innerSphere.mesh.geometry.scale(1.2, 1.2, 1.2);
+        // this.experience.world.engineGroup.coreGroup.innerSphere.mesh.geometry.scale(1.1, 1.1, 1.1); 
       }
       
-      this.experience.world.engineGroup.coreGroup.outerSphere.material.transparent = true;
-      this.experience.world.engineGroup.coreGroup.outerSphere.material.opacity = 0;
-      this.experience.world.engineGroup.coreGroup.outerSphere.material.transmission = 0;
+      // this.experience.world.engineGroup.coreGroup.outerSphere.material.transparent = true;
+      // this.experience.world.engineGroup.coreGroup.outerSphere.material.opacity = 0;
+      // this.experience.world.engineGroup.coreGroup.outerSphere.material.transmission = 0;
       
     // Get the normal of the contact. Make sure it points away from the surface of the stationary body
       if (contact.bi.id === cloneBodyId) {
@@ -276,32 +295,103 @@ export default class Physics {
     this.world.addBody(this.obstacleBody);
   }
 
+  setObstacleSphereTopBody(meshPosition, meshQuaternion) {
+    this.obstacleSphereTopBody = new CANNON.Body({
+      mass: 0, // Static body
+      shape: new CANNON.Sphere(36),
+      position: new CANNON.Vec3(370, 0, 0),
+    });
+    this.obstacleSphereTopBody.position.copy(meshPosition);
+    this.obstacleSphereTopBody.quaternion.copy(meshQuaternion);
+    this.world.addBody(this.obstacleSphereTopBody);
+  }
+
+  setObstacleSphereBottomBody(meshPosition, meshQuaternion) {
+    this.obstacleSphereBottomBody = new CANNON.Body({
+      mass: 0, // Static body
+      shape: new CANNON.Sphere(36),
+      position: new CANNON.Vec3(370, 0, 0),
+    });
+    this.obstacleSphereBottomBody.position.copy(meshPosition);
+    this.obstacleSphereBottomBody.quaternion.copy(meshQuaternion);
+    this.world.addBody(this.obstacleSphereBottomBody);
+  }
+
+  setObstacleSphereCenterBody(meshPosition, meshQuaternion) {
+    this.obstacleSphereCenterBody = new CANNON.Body({
+      mass: 0, // Static body
+      shape: new CANNON.Sphere(36),
+      position: new CANNON.Vec3(370, 0, 0),
+    });
+    this.obstacleSphereCenterBody.position.copy(meshPosition);
+    this.obstacleSphereCenterBody.quaternion.copy(meshQuaternion);
+    this.world.addBody(this.obstacleSphereCenterBody);
+  }
+
+ 
   update() {
     this.delta = this.experience.time.getDelta();
     this.world.step(this.timeStep, this.delta, 3);
+    document.getElementById('counter-display').innerText = `${this.cloneMeshesAndBodies.length}`;
 
-    // Have physics body follow the engine group so as to easily maneuver the engine group
-    if (this.experience.world.engineGroup && this.experience.world.engineGroup) {
-      this.engineBody.position.copy(this.experience.world.engineGroup.instance.position)
-      this.engineBody.quaternion.copy(this.experience.world.engineGroup.instance.quaternion)
+    // Ensure the engine group and its instance are defined before accessing them
+    if (this.experience.world.engineGroup && this.experience.world.engineGroup.instance) {
+      this.engineBody.position.copy(this.experience.world.engineGroup.instance.position);
+      this.engineBody.quaternion.copy(this.experience.world.engineGroup.instance.quaternion);
+    } else {
+      console.log('Engine group or its instance is not defined.');
+      return; // Exit the update function early if critical objects are undefined
     }
-    // Have target mesh follow the target body
+
+    // Ensure target meshes and bodies are initialized before proceeding
     if (this.targetMeshes.length === 6 && this.targetBodies.length === 6) {
-      this.targetBodies.forEach((targetBody) => {
-        this.targetMeshes[targetBody.id - 1].position.copy(targetBody.position);
-        this.targetMeshes[targetBody.id - 1].quaternion.copy(targetBody.quaternion);
-      })
+      this.targetBodies.forEach((targetBody, index) => {
+        if (this.targetMeshes[index]) {
+          this.targetMeshes[index].position.copy(targetBody.position);
+          this.targetMeshes[index].quaternion.copy(targetBody.quaternion);
+        } else {
+          console.log(`Target mesh at index ${index} is not defined.`);
+        }
+      });
+    } else {
+      console.log('Target meshes or target bodies are not properly initialized.');
+      return; // Exit the update function early if critical objects are undefined
     }
-    // Have clone mesh follow the clone body
+
+    // Ensure clone meshes and bodies are initialized before proceeding
     if (this.cloneMeshesAndBodies.length > 0) {
       this.cloneMeshesAndBodies.forEach((cloneMeshAndBody) => {
-        cloneMeshAndBody.cloneMesh.position.copy(cloneMeshAndBody.cloneBody.position);
-        cloneMeshAndBody.cloneMesh.quaternion.copy(cloneMeshAndBody.cloneBody.quaternion);
-      })
+        if (cloneMeshAndBody.cloneMesh && cloneMeshAndBody.cloneBody) {
+          cloneMeshAndBody.cloneMesh.position.copy(cloneMeshAndBody.cloneBody.position);
+          cloneMeshAndBody.cloneMesh.quaternion.copy(cloneMeshAndBody.cloneBody.quaternion);
+        } else {
+          console.log('Clone mesh or clone body is not defined.');
+        }
+      });
+    } else if (!this.clonesInitialized) {
+      console.log('No clone meshes and bodies are initialized.');
+      this.clonesInitialized = true; // Set the flag to true to prevent further logging
     }
-    if (this.cloneMeshesAndBodies.length === 60) {
-      console.log('60 clones');
-      this.world.gravity.set(-20, 0, 0)
+
+    // Remove target mesh and body
+    // if (this.targetToRemove.mesh && this.targetToRemove.body) {
+      // this.scene.remove(this.targetToRemove.mesh);
+      // this.world.remove(this.targetToRemove.body);
+      // this.targetMeshes.splice(this.targetMeshes.indexOf(this.targetToRemove.mesh), 1);
+      // this.targetBodies.splice(this.targetBodies.indexOf(this.targetToRemove.body), 1);
+    // }
+    if (this.cloneMeshesAndBodies.length === this.maxClonesNumber && !this.isGameOver) {
+      console.log('this.cloneMeshesAndBodies.length', this.cloneMeshesAndBodies.length);
+      this.isGameOver = true;
+    }
+
+    if (this.isGameOver) {
+      this.world.gravity.set(0, 0, 20);
+      // remove all targets
+      this.targetMeshes.forEach((targetMesh, index) => {
+        this.scene.remove(targetMesh);
+        this.world.remove(this.targetBodies[index]);
+      });
     }
   }
 }

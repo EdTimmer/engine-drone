@@ -99,7 +99,7 @@ body
   .counter-container {
     position: absolute;
     top: 20px;
-    right: 20px;
+    left: 20px;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -116,6 +116,7 @@ body
     margin: 0;
     background: none;
     padding: 0;
+    z-index: 10;
   
     /* Styling */
     font-family: "Press Start 2P", system-ui;
@@ -191,6 +192,7 @@ body
     margin: 0;
     background: none;
     padding: 0;
+    z-index: 10;
   
     /* Styling */
     font-family: "Press Start 2P", system-ui;

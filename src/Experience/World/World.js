@@ -6,6 +6,9 @@ import Wall from "./ArenaGroup/Wall"
 import Ceiling from "./ArenaGroup/Ceiling"
 import Floor from "./ArenaGroup/Floor"
 import Obstacle from "./ArenaGroup/Obstacle"
+import ObstacleSphereTop from "./ArenaGroup/ObstacleSphereTop"
+import ObstacleSphereBottom from "./ArenaGroup/ObstacleSphereBottom"
+import ObstacleSphereCenter from "./ArenaGroup/ObstacleSphereCenter"
 
 export default class World {
   constructor() {
@@ -40,6 +43,9 @@ export default class World {
       this.ceiling = new Ceiling();
       this.floor = new Floor();
       this.obstacle = new Obstacle();
+      this.obstacleSphereTop = new ObstacleSphereTop();
+      this.obstacleSphereBottom = new ObstacleSphereBottom();
+      this.obstacleSphereCenter = new ObstacleSphereCenter();
       this.environment = new Environment()
            
       // Pass engineGroup to the camera
@@ -60,6 +66,9 @@ export default class World {
     if (this.wall) this.wall.setWireframe(value)
     if (this.ceiling) this.ceiling.setWireframe(value)
     if (this.floor) this.floor.setWireframe(value)
+    if (this.obstacleSphereTop) this.obstacleSphereTop.setWireframe(value)
+    if (this.obstacleSphereBottom) this.obstacleSphereBottom.setWireframe(value)
+    if (this.obstacleSphereCenter) this.obstacleSphereCenter.setWireframe(value)
     if (this.obstacle) this.obstacle.setWireframe(value)
   }
 
@@ -75,6 +84,15 @@ export default class World {
     }
     if (this.obstacle) {
       this.obstacle.update()
+    }
+    if (this.obstacleSphereTop) {
+      this.obstacleSphereTop.update()
+    }
+    if (this.obstacleSphereBottom) {
+      this.obstacleSphereBottom.update()
+    }
+    if (this.obstacleSphereCenter) {
+      this.obstacleSphereCenter.update()
     }
   }
 }

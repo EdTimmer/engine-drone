@@ -15,7 +15,7 @@ export default class CoreGroup {
 
     this.setInstance();
     this.setInnerSphere();
-    this.setOuterSphere();
+    // this.setOuterSphere();
     this.setRingOne();
     this.setRingTwo();
     this.setRingThree();

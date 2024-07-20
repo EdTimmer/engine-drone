@@ -161,13 +161,13 @@ export default class EngineGroup {
       this.instance.rotation.y -= rotationSpeed * deltaTime;
     }
     if (this.keyStates['w']) {
-      const top = new THREE.Vector3(0, 0.05, 0);
+      const top = new THREE.Vector3(0, 0.13, 0);
       if (this.instance.position.y < 100) {
         this.instance.position.add(top.multiplyScalar(verticalSpeed * deltaTime));
       }
     }
     if (this.keyStates['s']) {
-      const down = new THREE.Vector3(0, -0.05, 0);
+      const down = new THREE.Vector3(0, -0.13, 0);
       if (this.instance.position.y > -100) {
         this.instance.position.add(down.multiplyScalar(verticalSpeed * deltaTime));
       }
