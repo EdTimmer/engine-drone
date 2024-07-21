@@ -20,7 +20,7 @@ export default class Obstacle {
 
   setMaterial() {
     this.material = new THREE.MeshBasicMaterial({ 
-      color: 0xffff00, 
+      color: '#4DEEEF', 
       wireframe: this.showWireframe, 
       transparent: true, 
       opacity: this.showWireframe ? 1 : 0,
@@ -28,7 +28,7 @@ export default class Obstacle {
   }
 
   setGeometry() {
-    this.geometry = new THREE.CylinderGeometry(this.radius, this.radius, this.height, 32);
+    this.geometry = new THREE.CylinderGeometry(this.radius, this.radius, this.height, 16);
   }
 
   setMesh() {

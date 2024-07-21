@@ -9,6 +9,7 @@ import Obstacle from "./ArenaGroup/Obstacle"
 import ObstacleSphereTop from "./ArenaGroup/ObstacleSphereTop"
 import ObstacleSphereBottom from "./ArenaGroup/ObstacleSphereBottom"
 import ObstacleSphereCenter from "./ArenaGroup/ObstacleSphereCenter"
+import ModalController from "../ModalController"
 
 export default class World {
   constructor() {
@@ -46,6 +47,7 @@ export default class World {
       this.obstacleSphereTop = new ObstacleSphereTop();
       this.obstacleSphereBottom = new ObstacleSphereBottom();
       this.obstacleSphereCenter = new ObstacleSphereCenter();
+      this.modalController = new ModalController('modal')
       this.environment = new Environment()
            
       // Pass engineGroup to the camera

@@ -18,7 +18,7 @@ export default class ObstacleSphereCenter {
 
   setMaterial() {
     this.material = new THREE.MeshBasicMaterial({ 
-      color: 0xffff00, 
+      color: '#4DEEEF', 
       wireframe: this.showWireframe, 
       transparent: true, 
       opacity: this.showWireframe ? 1 : 0,
@@ -26,7 +26,7 @@ export default class ObstacleSphereCenter {
   }
 
   setGeometry() {
-    this.geometry = new THREE.SphereGeometry(36, 32, 32);
+    this.geometry = new THREE.SphereGeometry(36, 8, 8);
   }
 
   setMesh() {

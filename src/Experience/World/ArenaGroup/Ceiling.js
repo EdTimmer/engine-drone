@@ -25,7 +25,7 @@ export default class Ceiling {
   }
 
   setGeometry() {
-    this.geometry = new THREE.PlaneGeometry(this.radius * 2, this.radius * 2);
+    this.geometry = new THREE.PlaneGeometry(this.radius * 2, this.radius * 2, 7, 7);
   }
 
   setMesh() {
