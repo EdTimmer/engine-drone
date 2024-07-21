@@ -28,7 +28,3 @@ export default class ModalController {
   }
 }
 
-// Initialize the modal controller when the window loads
-// window.onload = function() {
-//   const modalController = new ModalController('modal');
-// }
