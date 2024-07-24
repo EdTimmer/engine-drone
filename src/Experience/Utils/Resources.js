@@ -17,6 +17,7 @@ export default class Resources extends EventEmitter {
     this.loaded = 0
     this.experience = new Experience()
     this.scene = this.experience.scene
+    this.loadingScreen = document.getElementById('loading-screen');
 
     this.setLoaders()
     this.startLoading()
@@ -31,6 +32,9 @@ export default class Resources extends EventEmitter {
   }
 
   startLoading() {
+    // Show loading screen
+    this.loadingScreen.style.display = 'flex';
+
     // Load each source
     for (const source of this.sources) {
       if (source.type === 'background') {
@@ -56,6 +60,9 @@ export default class Resources extends EventEmitter {
     this.loaded++
 
     if (this.loaded === this.toLoad) {
+      // Hide loading screen
+      this.loadingScreen.style.display = 'none';
+      
       console.log('finished loading all resources');
       this.trigger('ready')
     }
