@@ -39,14 +39,14 @@ body
   .wKey {
     position: absolute;
     bottom: 80px;
-    right: 210px;
+    left: 20px;
     display: flex;
   }
   
   .sKey {
     position: absolute;
     bottom: 20px;
-    right: 210px;
+    left: 20px;
     display: flex;
   }
   
@@ -87,7 +87,7 @@ body
   
   .reset-container {
     position: absolute;
-    bottom: 20px;
+    top: 20px;
     left: 20px;
     display: flex;
     flex-direction: row;
@@ -99,7 +99,7 @@ body
   .counter-container {
     position: absolute;
     top: 20px;
-    left: 20px;
+    left: 80px;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -250,12 +250,19 @@ body
 .modal-content {
     background-color: #000;
     color: #fff;
+    font-family: "Inter", sans-serif;
     font-size: 20px;
-    margin: 15% auto; /* 15% from the top and centered */
+    margin: 5% auto; /* 5% from the top and centered */
     padding: 20px;
     border: 1px solid #888;
     border-radius: 10px;
     width: 700px; /* Could be more or less, depending on screen size */
+}
+
+.modal-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
 }
 
 .close {
